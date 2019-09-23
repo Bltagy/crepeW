@@ -1,0 +1,921 @@
+openapi: 3.0.0
+info:
+  title: 'Crepe & Waffle API documentation'
+  description: 'A documented API for the required requests.'
+  contact:
+    email: ahmed.bltagy@appssquare.com
+  version: 1.0.0
+servers:
+  -
+    url: 'https://app.crepe-waffle.com/api'
+    description: 'Production Server'
+paths:
+  /areas:
+    get:
+      tags:
+        - Content
+      summary: 'Retrieve the list of areas with its fees each.'
+      operationId: areas
+      responses:
+        200:
+          description: "\n\n  *     "
+  /login:
+    post:
+      tags:
+        - User
+      summary: 'User login'
+      description: ''
+      operationId: login
+      parameters:
+        -
+          name: username
+          in: query
+          description: 'User email'
+          required: true
+          schema:
+            type: string
+        -
+          name: password
+          in: query
+          description: 'Chosen password'
+          required: true
+          schema:
+            type: string
+        -
+          name: grant_type
+          in: query
+          description: 'static always = ''password'''
+          required: true
+          schema:
+            type: string
+        -
+          name: client_id
+          in: query
+          description: 'Auth client ID and it is static = ''2'''
+          required: true
+          schema:
+            type: string
+        -
+          name: client_secret
+          in: query
+          description: 'predefined static value = ''YLSUrWO0K16vbbcEJgsna7KBdhQrEwT5zyYcf3ZK'''
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'The User object with token to use it on SMS verification message'
+        401:
+          description: 'Invalid credentials'
+        405:
+          description: 'User not confirmed'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /SendContactUs:
+    post:
+      tags:
+        - 'Contact Us'
+      summary: 'Send the contact us form'
+      description: ''
+      operationId: contactUs
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'User Id in case logged in'
+          required: false
+          schema:
+            type: string
+        -
+          name: name
+          in: query
+          description: 'full name'
+          required: false
+          schema:
+            type: string
+        -
+          name: email
+          in: query
+          description: 'User email'
+          required: false
+          schema:
+            type: string
+        -
+          name: photo
+          in: query
+          description: 'attached photo base64'
+          schema:
+            type: string
+        -
+          name: type
+          in: query
+          description: 'The type of message ( suggestion, complain or comment)'
+          schema:
+            type: string
+        -
+          name: message
+          in: query
+          description: 'The form message'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'The User object with token to use it on SMS verification message'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /gallery:
+    get:
+      tags:
+        - 'Sliders&gallery'
+      summary: 'Get and store gallery images'
+      parameters:
+        -
+          name: _start
+          in: query
+          description: 'User name'
+          required: false
+          schema:
+            type: string
+        -
+          name: _sort
+          in: query
+          description: 'User email'
+          required: false
+          schema:
+            type: string
+        -
+          name: _order
+          in: query
+          description: 'Chosen password'
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: "\n\n  *     "
+  '/gallery/{id}':
+    get:
+      tags:
+        - 'Sliders&gallery'
+      summary: 'Show one'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'User name'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "\n\n  *     "
+  /homeSlider:
+    get:
+      tags:
+        - 'Sliders&gallery'
+      summary: 'Retrieve home sliders for website and app'
+      description: ''
+      operationId: homeSlider
+      responses:
+        200:
+          description: ''
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /submitToken:
+    post:
+      tags:
+        - User
+      summary: 'Submit user device token '
+      description: ''
+      operationId: submitToken
+      parameters:
+        -
+          name: token
+          in: query
+          description: 'Device token'
+          required: true
+          schema:
+            type: string
+        -
+          name: device_id
+          in: query
+          description: 'User device id'
+          required: true
+          schema:
+            type: string
+        -
+          name: user_id
+          in: query
+          description: 'User ID if available'
+          required: false
+          schema:
+            type: integer
+        -
+          name: ios
+          in: query
+          description: 'set 1 in case IOS device otherwise you can set 0 or not sending it at all'
+          required: false
+          schema:
+            type: integer
+        -
+          name: X-fcmData
+          in: query
+          description: 'Important!!! This should add to header in case you can accept FCM data should be like (X-fcmData :1 ) or  (X-fcmData :0 ) or you able to not send it.This will add to the orders notifications ( type : orderStatus ) beside title and body'
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'Token update/saved'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /logout:
+    post:
+      tags:
+        - User
+      summary: 'logout user and delete his device id.'
+      description: ''
+      operationId: logout
+      parameters:
+        -
+          name: device_id
+          in: query
+          description: 'User device id'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Token has been deleted successfully'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  '/userNotification/{id}':
+    get:
+      tags:
+        - User
+      summary: 'Retrieve user notifications'
+      operationId: userNotification
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'User Id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "\n\n  *     "
+  /submitOrder:
+    post:
+      tags:
+        - Orders
+      summary: 'Submit An order'
+      description: "the object that have the rate it should look like\n\n    {'user_id':'276','area_id':'2','fees':'10','discount_type':'(global, promoCode, both or none )','promo_code':'ds2ss','discount_amount':'55','total_price':'520','total_after_discount':'420','notes':'notes','products':[{'id':'2','quantity':'2','price':'220','notes':'notes','additions':[{'id':'2','price':'22'}]},{'id':'4','quantity':'1','price':'44','notes':'notes','additions':[{'id':'10','price':'12'},{'id':'11','price':'12'}]}],'address':'home_number    zone_name    zone_id    floor_number    apartment_number    notes'}"
+      operationId: submitOrder
+      parameters:
+        -
+          name: user_id
+          in: query
+          description: 'User ID ( already retrieved )'
+          required: true
+          schema:
+            type: integer
+        -
+          name: products
+          in: query
+          description: 'the products object includes quantities and total prices'
+          required: false
+          schema:
+            type: string
+        -
+          name: address
+          in: query
+          description: 'should be one of ( address, home_address or office_address) '
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /serviceRate:
+    post:
+      tags:
+        - Orders
+      summary: 'Submit a rate for a service'
+      description: 'Authentication required on header using token'
+      operationId: serviceRate
+      parameters:
+        -
+          name: user_id
+          in: query
+          description: 'User ID ( already retrieved )'
+          required: true
+          schema:
+            type: integer
+        -
+          name: service_rate
+          in: query
+          description: "the object that have the rate it should look like\n\n    {'crepe':5,'waffle ':5,'delivery':5} "
+          required: true
+          schema:
+            type: string
+        -
+          name: order_id
+          in: query
+          description: 'The Order id that you got from submitting order'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: ''
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  '/orderHistory/{user_id}':
+    get:
+      tags:
+        - Orders
+        - User
+      summary: 'list all orders for a user'
+      operationId: orderHistory
+      parameters:
+        -
+          name: user_id
+          in: path
+          description: 'user id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "\n    [{'id':1,'user_id':285,'total_price':'541','temp_o':null,'address':'home_address','notes':'Example of notes','fees':'5','order_status':'pending','delivery_date':null,'order_detailes':[{'id':1,'order_id':1,'product_id':2,'quantity':1,'price':null,'comment':null,'notes':null,'size':'Small','size_price':'1','order_products_addition':[{'id':1,'order_detail_id':1,'order_id':1,'product_id':2,'product_addition_id':1,'quantity':1,'price':'150.0','product_addition_name':'Cheese'}],'product_name':'Crepe Name'},{'id':2,'order_id':1,'product_id':4,'quantity':5,'price':null,'comment':null,'notes':null,'size':null,'size_price':null,'order_products_addition':[{'id':2,'order_detail_id':2,'order_id':1,'product_id':4,'product_addition_id':1,'quantity':1,'price':'150.0','product_addition_name':'Cheese'},{'id':3,'order_detail_id':2,'order_id':1,'product_id':4,'product_addition_id':2,'quantity':1,'price':'180.0','product_addition_name':'Sauce'}],'product_name':'Crepe Name'}]}]\n     *     "
+  /productCategory:
+    get:
+      tags:
+        - ProductCategory
+      summary: 'Get and store productCategory images'
+      responses:
+        200:
+          description: "\n\n  *     "
+  '/productCategory/{id}':
+    get:
+      tags:
+        - ProductCategory
+      summary: 'Show one'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'User name'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "\n\n  *     "
+  /products:
+    get:
+      tags:
+        - Products
+      summary: 'Get and store product images'
+      operationId: ListProducts
+      parameters:
+        -
+          name: category_id
+          in: query
+          description: 'Category ID'
+          required: false
+          schema:
+            type: integer
+        -
+          name: user_id
+          in: query
+          description: 'The user ID if available to return if the user has rated the product or not'
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "\n     *     "
+  /productsByCategories:
+    get:
+      tags:
+        - Products
+      summary: 'Get products categorized '
+      operationId: productsByCategories
+      responses:
+        200:
+          description: "\n     *     "
+  '/products/{id}':
+    get:
+      tags:
+        - Products
+      summary: 'Show one'
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Product ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "\n     *     "
+  '/productsAddition/{product_id}':
+    get:
+      tags:
+        - Products
+      summary: 'Get product additions'
+      operationId: productsAddition
+      responses:
+        200:
+          description: ''
+  '/verifyPromoCode/{promo_code}':
+    get:
+      tags:
+        - Orders
+      summary: 'Check the promo code status'
+      operationId: verifyPromoCode
+      responses:
+        200:
+          description: ''
+        422:
+          description: 'Promo code not found.'
+  /register:
+    post:
+      tags:
+        - User
+      summary: 'Register new user'
+      description: ''
+      operationId: register
+      parameters:
+        -
+          name: name
+          in: query
+          description: 'User full name'
+          required: true
+          schema:
+            type: string
+        -
+          name: email
+          in: query
+          description: 'User email'
+          required: true
+          schema:
+            type: string
+        -
+          name: photo
+          in: query
+          description: 'User photo base64'
+          schema:
+            type: string
+        -
+          name: password
+          in: query
+          description: 'Chosen password'
+          required: true
+          schema:
+            type: string
+        -
+          name: c_password
+          in: query
+          description: 'Chosen password confirmation'
+          required: true
+          schema:
+            type: string
+        -
+          name: address
+          in: query
+          description: 'User address'
+          schema:
+            type: string
+        -
+          name: home_address
+          in: query
+          description: 'User second home address'
+          schema:
+            type: string
+        -
+          name: office_address
+          in: query
+          description: 'User office address'
+          schema:
+            type: string
+        -
+          name: mobile_number
+          in: query
+          description: 'User mobile number'
+          required: true
+          schema:
+            type: string
+        -
+          name: gender
+          in: query
+          description: 'User gender (male or female) '
+          required: false
+          schema:
+            type: enum
+        -
+          name: landline_number
+          in: query
+          description: 'User land line number'
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'The User object with token to use it on SMS verification message'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /fbLogin:
+    post:
+      tags:
+        - User
+      summary: 'Facebook user register or login.'
+      description: ''
+      operationId: fbLogin
+      parameters:
+        -
+          name: fb_id
+          in: query
+          description: 'Facebook user id'
+          required: true
+          schema:
+            type: string
+        -
+          name: name
+          in: query
+          description: 'User full name'
+          required: false
+          schema:
+            type: string
+        -
+          name: email
+          in: query
+          description: 'User email'
+          required: false
+          schema:
+            type: string
+        -
+          name: address
+          in: query
+          description: 'User address'
+          required: false
+          schema:
+            type: string
+        -
+          name: mobile_number
+          in: query
+          description: 'User mobile number'
+          required: false
+          schema:
+            type: string
+        -
+          name: landline_number
+          in: query
+          description: 'User land line number'
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'The User object with token to use it on SMS verification message'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /userConfirm:
+    post:
+      tags:
+        - User
+      summary: 'Confirm user using sms 4 digits'
+      description: 'Authentication required on header using token'
+      operationId: userConfirm
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'User ID ( already retrieved on login or register requests )'
+          required: true
+          schema:
+            type: integer
+        -
+          name: code
+          in: query
+          description: 'the 4 digits code that the user got on his mobile number'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'The User object with token to use it on SMS verification message'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /resendCode:
+    post:
+      tags:
+        - User
+      summary: 'Re send the sms confirmation code'
+      description: 'Authentication required on header using token'
+      operationId: resendCode
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'User ID ( already retrieved on login or register requests )'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: ''
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  '/profile/{id}':
+    get:
+      tags:
+        - User
+      summary: 'Get user profile by name'
+      description: ''
+      operationId: profile
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'User ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'The User object including the areas list to make it easy.'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+    put:
+      tags:
+        - User
+      summary: 'update user profile'
+      description: ''
+      operationId: profile_udpate
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'User ID'
+          required: true
+          schema:
+            type: integer
+        -
+          name: name
+          in: query
+          description: 'User full name'
+          required: true
+          schema:
+            type: string
+        -
+          name: email
+          in: query
+          description: 'User email'
+          schema:
+            type: string
+        -
+          name: oldPassword
+          in: query
+          description: 'In case changing password'
+          schema:
+            type: string
+        -
+          name: password
+          in: query
+          description: 'Chosen password In case changing password'
+          schema:
+            type: string
+        -
+          name: c_password
+          in: query
+          description: 'Chosen password confirmation'
+          schema:
+            type: string
+        -
+          name: photo
+          in: query
+          description: 'User photo base64'
+          schema:
+            type: string
+        -
+          name: address
+          in: query
+          description: 'User address'
+          schema:
+            type: string
+        -
+          name: home_address
+          in: query
+          description: 'User second home address'
+          schema:
+            type: string
+        -
+          name: office_address
+          in: query
+          description: 'User office address'
+          schema:
+            type: string
+        -
+          name: gender
+          in: query
+          description: 'User gender (male or female) '
+          schema:
+            type: enum
+        -
+          name: mobile_number
+          in: query
+          description: 'User mobile number'
+          schema:
+            type: string
+        -
+          name: landline_number
+          in: query
+          description: 'User land line number'
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'The User object with token to use it on SMS verification message'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  '/removePhoto/{id}':
+    put:
+      tags:
+        - User
+      summary: 'remove user photo'
+      description: ''
+      operationId: removePhoto
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'User ID'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'The User photo has been removed'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /forgetPassword:
+    get:
+      tags:
+        - User
+      summary: 'Forget password request'
+      description: ''
+      operationId: forgetPassword
+      parameters:
+        -
+          name: mobile_number
+          in: query
+          description: 'User mobile'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'The User'
+        404:
+          description: 'User not found'
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /changePassword:
+    post:
+      tags:
+        - User
+      summary: 'Change user password using the SMS code'
+      description: 'Authentication required on header using token'
+      operationId: changePassword
+      parameters:
+        -
+          name: id
+          in: query
+          description: 'User ID ( already retrieved )'
+          required: true
+          schema:
+            type: integer
+        -
+          name: code
+          in: query
+          description: 'The SMS code'
+          required: true
+          schema:
+            type: integer
+        -
+          name: password
+          in: query
+          description: 'the new password Please not that your password confirmation should be from your side'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+        422:
+          description: 'Validation Error'
+      security:
+        -
+          petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+components:
+  securitySchemes:
+    'Password Based':
+      type: oauth2
+      description: 'Use a global client_id / client_secret and your username / password combo to obtain a token'
+      in: header
+      flows:
+        password:
+          authorizationUrl: /api/login
+          tokenUrl: /api/login
+          scopes: {  }
+      scheme: https
+tags:
+  -
+    name: User
+    description: 'Every thing related to user'
